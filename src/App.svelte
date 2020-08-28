@@ -5,6 +5,7 @@
     const VIEW_LOG = 1;
     const VIEW_OPTIONS = 2;
 
+    let NOTIFICATION_DENIED = false;
     let NOTIFICATION_ALLOWED = false;
     let DARK_MODE = true;
 
@@ -37,6 +38,7 @@
                 NOTIFICATION_ALLOWED = true;
                 break;
             case "denied":
+                NOTIFICATION_DENIED = true;
                 break;
             default:
                 requestNotificationPerms();
@@ -113,8 +115,10 @@ nav ul li {
         <li>
             {#if NOTIFICATION_ALLOWED}
                 Notifications Enabled
+            {:else if NOTIFICATION_DENIED}
+                Notifications Denied (check site settings)
             {:else}
-                <a href="#notifications" on:click|preventDefault={requestNotificationPerms}>
+                <a href="#notifications" on:click={requestNotificationPerms}>
                     Enable Notifications
                 </a>
             {/if}

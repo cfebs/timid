@@ -15,11 +15,17 @@
     let COUNTDOWN_TYPE = COUNTDOWN_TYPE_WORK;
     let COUNTDOWN_STATE = COUNTDOWN_STATE_STOP;
 
+    let notesValue = "";
+
     let countdownSeconds = workSeconds;
     let remainingSeconds = countdownSeconds;
     let timerInterval;
     let waitInterval;
     $: remainingSecondsInTime = secondsToTime(remainingSeconds)
+
+    let logEntries = [];
+    const numLastLogEntries = 10;
+    $: lastLogEntries = logEntries.slice(-1 * numLastLogEntries).reverse();
 
     function padZeros(n) {
         if (n >= 10) {
@@ -86,7 +92,21 @@
         }, 15000);
     }
 
+    function createLog() {
+        console.log('Creating log', notesValue);
+        const logEntry = {
+            date: new Date(),
+            countdown_type: COUNTDOWN_TYPE,
+            notes: notesValue,
+            total_seconds: countdownSeconds - remainingSeconds,
+        };
+
+        logEntries.push(logEntry);
+        logEntries = logEntries;
+    }
+
     function nextStage() {
+        createLog()
         if (COUNTDOWN_TYPE === COUNTDOWN_TYPE_WORK) {
             console.log('Going into break for', breakSeconds);
             countdownSeconds = breakSeconds;
@@ -110,6 +130,10 @@
     .timer {
         width: 800px;
         text-align: center;
+        margin: 0 auto;
+    }
+    .log {
+        width: 800px;
         margin: 0 auto;
     }
     textarea {
@@ -146,7 +170,7 @@
         {/if}
     </div>
 
-    <textarea placeholder="Notes for this session" rows={5}></textarea>
+    <textarea placeholder="Notes for this session" rows={5} bind:value={notesValue}></textarea>
 
     <button on:click={startTimer}>
         {#if COUNTDOWN_STATE === COUNTDOWN_STATE_PAUSE}
@@ -165,4 +189,12 @@
         {/if}
     </button>
     <button on:click={pause} disabled={COUNTDOWN_STATE !== COUNTDOWN_STATE_RUN}>Pause</button>
+</div>
+<div class="log">
+    <h3>Last {numLastLogEntries} log entries</h3>
+    <ul>
+    {#each lastLogEntries as log}
+        <li>{log.date} - {log.notes}</li>
+    {/each}
+    </ul>
 </div>
