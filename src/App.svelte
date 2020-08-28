@@ -23,20 +23,61 @@
 :root {
     --bg-color: #000000;
     --text-color: #FFFFFF;
+    --anchor-color: #fa2e2e;
+    --anchor-visited-color: #ea0606;
 }
 :global(body, textarea, button, input) {
     background: var(--bg-color);
     color: var(--text-color);
 }
+:global(a) {
+    color: var(--anchor-color);
+}
+:global(a:visited) {
+    color: var(--anchor-visited-color);
+}
 :global(body.light) {
     --bg-color: #FFFFFF;
     --text-color: #000000;
 }
+
+h1 {
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+nav {
+    position: absolute;
+    bottom: 0.25rem;
+    left: 1rem;
+}
+
+nav ul li, nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+nav ul {
+    display: inline-block;
+}
+
+nav ul li {
+    font-size: 1.1em;
+    display: inline-block;
+    padding-right: 1rem;
+}
+
+.vcenter {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+}
 </style>
 
-<h1>Work timer</h1>
 
 <nav>
+    <h1>Work timer</h1>
     <ul>
         <li><a href="#timer">Timer</a></li>
         <li><a href="#log">Log</a></li>
@@ -45,4 +86,6 @@
     </ul>
 </nav>
 
-<Timer />
+<div class="vcenter">
+    <Timer />
+</div>
