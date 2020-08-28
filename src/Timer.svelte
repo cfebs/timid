@@ -46,7 +46,8 @@
             remainingSeconds -= 1;
             if (remainingSeconds === 0) {
                 clearInterval(timerInterval);
-                nextStage();
+                COUNTDOWN_TYPE = COUNTDOWN_STATE_WAITING;
+                notify();
             }
         }, 1000);
     }
@@ -56,11 +57,9 @@
         COUNTDOWN_STATE = COUNTDOWN_STATE_PAUSE;
     }
 
-    function nextStage() {
-        // always go into waiting stage next
-        if (COUNTDOWN_TYPE !== COUNTDOWN_STATE_WAITING) {
-            COUNTDOWN_TYPE = COUNTDOWN_STATE_WAITING
-            return;
+    function notify() {
+        if (Notification.permission === "granted") {
+            var notification = new Notification("Done");
         }
     }
 
@@ -81,6 +80,7 @@
     }
     time {
         font-size: 15vh;
+        font-family: monospace;
     }
 </style>
 

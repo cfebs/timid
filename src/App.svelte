@@ -1,8 +1,11 @@
 <script>
+    import { onMount } from 'svelte';
+
     const VIEW_TIMER = 0;
     const VIEW_LOG = 1;
     const VIEW_OPTIONS = 2;
 
+    let NOTIFICATION_ALLOWED = false;
     let DARK_MODE = true;
 
     let CURRENT_VIEW = VIEW_TIMER;
@@ -17,6 +20,28 @@
         window.document.body.classList.toggle('light');
         DARK_MODE = !DARK_MODE;
     }
+
+    function requestNotificationPerms() {
+        Notification.requestPermission().then(function (permission) {
+            // If the user accepts, let's create a notification
+            if (permission === "granted") {
+                NOTIFICATION_ALLOWED = true
+                var notification = new Notification("Hi there!");
+            }
+        });
+    }
+
+    onMount(async () => {
+        switch (Notification.permission) {
+            case "granted":
+                NOTIFICATION_ALLOWED = true;
+                break;
+            case "denied":
+                break;
+            default:
+                requestNotificationPerms();
+        }
+    });
 </script>
 
 <style>
@@ -71,7 +96,8 @@ nav ul li {
 .vcenter {
     position: absolute;
     top: 40%;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%);
+    left: 50%;
 }
 </style>
 
@@ -82,7 +108,17 @@ nav ul li {
         <li><a href="#timer">Timer</a></li>
         <li><a href="#log">Log</a></li>
         <li><a href="#options">Options</a></li>
-        <li><a href="#" on:click={toggleColor}>{ DARK_MODE ? 'Light mode' : 'Dark mode' }</a></li>
+        <li>·</li>
+        <li><a href="#darkmode" on:click|preventDefault={toggleColor}>{ DARK_MODE ? 'Go light' : 'Go dark' }</a></li>
+        <li>
+            {#if NOTIFICATION_ALLOWED}
+                Notifications Enabled
+            {:else}
+                <a href="#notifications" on:click|preventDefault={requestNotificationPerms}>
+                    Enable Notifications
+                </a>
+            {/if}
+        </li>
     </ul>
 </nav>
 
