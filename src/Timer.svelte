@@ -195,6 +195,8 @@
     <ul>
     {#each lastLogEntries as log}
         <li>{log.date} - {log.notes}</li>
+    {:else}
+        <li>No logs yet, complete some stages first.</li>
     {/each}
     </ul>
 </div>
